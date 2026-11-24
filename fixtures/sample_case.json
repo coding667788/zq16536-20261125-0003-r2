@@ -1,0 +1,481 @@
+{
+  "schema": "splitrelease.case/v1",
+  "case_id": "synthetic-dual-revocation-case",
+  "description": "Two independent revocation races; either adverse race alone passes, both together fail.",
+  "phases": {
+    "ga": {
+      "threshold": 3,
+      "required_independent_groups": 2
+    },
+    "identity": {
+      "threshold": 2,
+      "required_independent_groups": 2
+    }
+  },
+  "logs": {
+    "build_log": [
+      {
+        "id": "build-core-v1",
+        "kind": "artifact_built",
+        "artifact_id": "lib-core",
+        "digest": "sha256:core-v1",
+        "dependencies": []
+      },
+      {
+        "id": "build-util-v1",
+        "kind": "artifact_built",
+        "artifact_id": "lib-util",
+        "digest": "sha256:util-v1",
+        "dependencies": [
+          {
+            "artifact_id": "lib-core",
+            "digest": "sha256:core-v1"
+          }
+        ]
+      },
+      {
+        "id": "build-combo-v1",
+        "kind": "artifact_built",
+        "artifact_id": "art-combo",
+        "digest": "sha256:combo-v1",
+        "dependencies": [
+          {
+            "artifact_id": "lib-util",
+            "digest": "sha256:util-v1"
+          }
+        ]
+      },
+      {
+        "id": "build-safe-v1",
+        "kind": "artifact_built",
+        "artifact_id": "art-safe",
+        "digest": "sha256:safe-v1",
+        "dependencies": [
+          {
+            "artifact_id": "lib-core",
+            "digest": "sha256:core-v1"
+          }
+        ]
+      },
+      {
+        "id": "build-alias-v1",
+        "kind": "artifact_built",
+        "artifact_id": "art-alias",
+        "digest": "sha256:alias-v1",
+        "dependencies": []
+      },
+      {
+        "id": "build-denied-v1",
+        "kind": "artifact_built",
+        "artifact_id": "art-denied",
+        "digest": "sha256:denied-v1",
+        "dependencies": []
+      },
+      {
+        "id": "tag-move-release",
+        "kind": "tag_move",
+        "tag": "release-current",
+        "from_artifact_id": "art-older",
+        "from_digest": "sha256:older-v1",
+        "to_artifact_id": "art-safe",
+        "to_digest": "sha256:safe-v1"
+      }
+    ],
+    "approval_log": [
+      {
+        "id": "id-alice",
+        "kind": "alias_binding",
+        "auth_ref": "key-alice",
+        "person_id": "p-alice"
+      },
+      {
+        "id": "id-bob",
+        "kind": "alias_binding",
+        "auth_ref": "key-bob",
+        "person_id": "p-bob"
+      },
+      {
+        "id": "id-carol",
+        "kind": "alias_binding",
+        "auth_ref": "key-carol",
+        "person_id": "p-carol"
+      },
+      {
+        "id": "id-dave",
+        "kind": "alias_binding",
+        "auth_ref": "key-dave",
+        "person_id": "p-dave"
+      },
+      {
+        "id": "id-robin-old",
+        "kind": "alias_binding",
+        "auth_ref": "key-roving",
+        "person_id": "p-robin"
+      },
+      {
+        "id": "id-anchor",
+        "kind": "alias_binding",
+        "auth_ref": "key-anchor",
+        "person_id": "p-anchor"
+      },
+      {
+        "id": "vote-alice",
+        "kind": "vote",
+        "phase": "ga",
+        "auth_ref": "key-alice",
+        "group_id": "grp-release-a",
+        "group_name": "Release Approvers",
+        "independence_key": "ind-release-a",
+        "closure_digest": "depclosure-v1:3df6fa69f098b4237a654cb5ff016dae353b2cb3c6d0f531e69406a973f8c931"
+      },
+      {
+        "id": "vote-bob",
+        "kind": "vote",
+        "phase": "ga",
+        "auth_ref": "key-bob",
+        "group_id": "grp-release-b",
+        "group_name": "Release Approvers",
+        "independence_key": "ind-release-b",
+        "closure_digest": "depclosure-v1:3df6fa69f098b4237a654cb5ff016dae353b2cb3c6d0f531e69406a973f8c931"
+      },
+      {
+        "id": "vote-alias-anchor",
+        "kind": "vote",
+        "phase": "identity",
+        "auth_ref": "key-anchor",
+        "group_id": "grp-identity-a",
+        "independence_key": "ind-identity-a",
+        "closure_digest": "depclosure-v1:6e2a7e766a2234d5f72562ffb891bc4dbf063464cbf5b9ad0961138c5127361b"
+      },
+      {
+        "id": "sv1",
+        "kind": "vote",
+        "phase": "ga",
+        "person_id": "p-safe1",
+        "group_id": "grp-safe-a",
+        "independence_key": "ind-safe-a",
+        "closure_digest": "depclosure-v1:76a993154ecf6dc2e1584b3442d1a215de1e5ed627308f28b78f9f6b57ad4a5c"
+      },
+      {
+        "id": "sv2",
+        "kind": "vote",
+        "phase": "ga",
+        "person_id": "p-safe2",
+        "group_id": "grp-safe-b",
+        "independence_key": "ind-safe-b",
+        "closure_digest": "depclosure-v1:76a993154ecf6dc2e1584b3442d1a215de1e5ed627308f28b78f9f6b57ad4a5c"
+      },
+      {
+        "id": "sv3",
+        "kind": "vote",
+        "phase": "ga",
+        "person_id": "p-safe3",
+        "group_id": "grp-safe-a",
+        "independence_key": "ind-safe-a",
+        "closure_digest": "depclosure-v1:76a993154ecf6dc2e1584b3442d1a215de1e5ed627308f28b78f9f6b57ad4a5c"
+      },
+      {
+        "id": "sv4",
+        "kind": "vote",
+        "phase": "ga",
+        "person_id": "p-safe4",
+        "group_id": "grp-safe-b",
+        "independence_key": "ind-safe-b",
+        "closure_digest": "depclosure-v1:76a993154ecf6dc2e1584b3442d1a215de1e5ed627308f28b78f9f6b57ad4a5c"
+      },
+      {
+        "id": "dv1",
+        "kind": "vote",
+        "phase": "ga",
+        "person_id": "p-denied1",
+        "group_id": "grp-denied-a",
+        "independence_key": "ind-denied-a",
+        "closure_digest": "depclosure-v1:f9a6fe321114ded63c7c26bc13684e1c5b60f57dae613164a9db57360a9ab26d"
+      },
+      {
+        "id": "revoke-carol",
+        "kind": "revocation",
+        "action": "revoke",
+        "target_type": "person",
+        "target_id": "p-carol"
+      },
+      {
+        "id": "vote-carol",
+        "kind": "vote",
+        "phase": "ga",
+        "auth_ref": "key-carol",
+        "group_id": "grp-release-a",
+        "group_name": "Release Approvers",
+        "independence_key": "ind-release-a",
+        "closure_digest": "depclosure-v1:3df6fa69f098b4237a654cb5ff016dae353b2cb3c6d0f531e69406a973f8c931"
+      },
+      {
+        "id": "restore-carol",
+        "kind": "revocation",
+        "action": "restore",
+        "target_type": "person",
+        "target_id": "p-carol",
+        "predecessors": [
+          "revoke-carol"
+        ]
+      },
+      {
+        "id": "revoke-dave",
+        "kind": "revocation",
+        "action": "revoke",
+        "target_type": "person",
+        "target_id": "p-dave"
+      },
+      {
+        "id": "vote-dave",
+        "kind": "vote",
+        "phase": "ga",
+        "auth_ref": "key-dave",
+        "group_id": "grp-release-b",
+        "group_name": "Release Approvers",
+        "independence_key": "ind-release-b",
+        "closure_digest": "depclosure-v1:3df6fa69f098b4237a654cb5ff016dae353b2cb3c6d0f531e69406a973f8c931"
+      },
+      {
+        "id": "restore-dave",
+        "kind": "revocation",
+        "action": "restore",
+        "target_type": "person",
+        "target_id": "p-dave",
+        "predecessors": [
+          "revoke-dave"
+        ]
+      },
+      {
+        "id": "alias-move-mallory",
+        "kind": "alias_binding",
+        "auth_ref": "key-roving",
+        "person_id": "p-mallory"
+      },
+      {
+        "id": "vote-roving",
+        "kind": "vote",
+        "phase": "identity",
+        "auth_ref": "key-roving",
+        "person_id": "p-robin",
+        "group_id": "grp-identity-b",
+        "independence_key": "ind-identity-b",
+        "closure_digest": "depclosure-v1:6e2a7e766a2234d5f72562ffb891bc4dbf063464cbf5b9ad0961138c5127361b"
+      }
+    ]
+  },
+  "checkpoint": {
+    "checkpoint_id": "cp-bilateral-0001",
+    "confirmed": true,
+    "build_prefix": [
+      "build-core-v1",
+      "build-util-v1",
+      "build-combo-v1",
+      "build-safe-v1",
+      "build-alias-v1",
+      "build-denied-v1",
+      "tag-move-release"
+    ],
+    "approval_prefix": [
+      "id-alice",
+      "id-bob",
+      "id-carol",
+      "id-dave",
+      "id-robin-old",
+      "id-anchor",
+      "vote-alice",
+      "vote-bob",
+      "vote-alias-anchor",
+      "sv1",
+      "sv2",
+      "sv3",
+      "sv4",
+      "dv1"
+    ]
+  },
+  "windows": [
+    {
+      "id": "w-two-revocations",
+      "event_ids": [
+        "revoke-carol",
+        "vote-carol",
+        "restore-carol",
+        "revoke-dave",
+        "vote-dave",
+        "restore-dave"
+      ],
+      "max_events_documented": 16
+    },
+    {
+      "id": "w-alias-move",
+      "event_ids": [
+        "alias-move-mallory",
+        "vote-roving"
+      ],
+      "max_events_documented": 16
+    }
+  ],
+  "candidates": [
+    {
+      "id": "rc-combo",
+      "artifact_id": "art-combo",
+      "artifact_digest": "sha256:combo-v1",
+      "phase": "ga",
+      "window_id": "w-two-revocations"
+    },
+    {
+      "id": "rc-alias",
+      "artifact_id": "art-alias",
+      "artifact_digest": "sha256:alias-v1",
+      "phase": "identity",
+      "window_id": "w-alias-move"
+    },
+    {
+      "id": "rc-safe",
+      "artifact_id": "art-safe",
+      "artifact_digest": "sha256:safe-v1",
+      "phase": "ga",
+      "mandatory": true
+    },
+    {
+      "id": "rc-denied",
+      "artifact_id": "art-denied",
+      "artifact_digest": "sha256:denied-v1",
+      "phase": "ga"
+    }
+  ],
+  "pause_points": [
+    {
+      "id": "pp01-hold-carol-vote",
+      "downtime_minutes": 3,
+      "hold_events": [
+        "vote-carol"
+      ]
+    },
+    {
+      "id": "pp02-hold-dave-vote",
+      "downtime_minutes": 4,
+      "hold_events": [
+        "vote-dave"
+      ]
+    },
+    {
+      "id": "pp03-hold-roving-vote",
+      "downtime_minutes": 2,
+      "hold_events": [
+        "vote-roving"
+      ]
+    },
+    {
+      "id": "pp04-freeze-combo-votes",
+      "downtime_minutes": 6,
+      "hold_events": [
+        "vote-carol",
+        "vote-dave"
+      ]
+    },
+    {
+      "id": "pp05-freeze-alias-receipt",
+      "downtime_minutes": 2,
+      "hold_events": [
+        "vote-roving",
+        "alias-move-mallory"
+      ]
+    },
+    {
+      "id": "pp06-freeze-all-contested",
+      "downtime_minutes": 10,
+      "hold_events": [
+        "vote-carol",
+        "vote-dave",
+        "vote-roving"
+      ]
+    },
+    {
+      "id": "pp07-hold-carol-identity",
+      "downtime_minutes": 7,
+      "hold_events": [
+        "id-carol"
+      ]
+    },
+    {
+      "id": "pp08-hold-dave-identity",
+      "downtime_minutes": 7,
+      "hold_events": [
+        "id-dave"
+      ]
+    },
+    {
+      "id": "pp09-hold-roving-old-identity",
+      "downtime_minutes": 3,
+      "hold_events": [
+        "id-robin-old"
+      ]
+    },
+    {
+      "id": "pp10-revocation-feed",
+      "downtime_minutes": 8,
+      "hold_events": [
+        "revoke-carol",
+        "revoke-dave"
+      ],
+      "note": "Removes adverse revocations; intentionally not protective."
+    },
+    {
+      "id": "pp11-combo-anchors",
+      "downtime_minutes": 9,
+      "hold_events": [
+        "vote-alice",
+        "vote-bob"
+      ]
+    },
+    {
+      "id": "pp12-global-vote-gate",
+      "downtime_minutes": 1,
+      "hold_events": [
+        "vote-alice",
+        "vote-bob",
+        "vote-carol",
+        "vote-dave",
+        "vote-roving",
+        "sv1",
+        "sv2",
+        "sv3",
+        "sv4",
+        "dv1"
+      ]
+    },
+    {
+      "id": "pp13-safe-redundant-vote",
+      "downtime_minutes": 1,
+      "hold_events": [
+        "sv4"
+      ],
+      "note": "Still leaves three safe votes."
+    },
+    {
+      "id": "pp14-build-heartbeat",
+      "downtime_minutes": 1,
+      "hold_events": [
+        "build-core-v1"
+      ],
+      "note": "Would block safe closure too, but does not cover uncertain candidates."
+    },
+    {
+      "id": "pp15-denied-receipt",
+      "downtime_minutes": 2,
+      "hold_events": [
+        "dv1"
+      ]
+    },
+    {
+      "id": "pp16-contested-bundle",
+      "downtime_minutes": 7,
+      "hold_events": [
+        "vote-carol",
+        "vote-dave",
+        "vote-roving"
+      ]
+    }
+  ]
+}
